@@ -4,6 +4,9 @@ namespace SpriteKind {
     export const Mystery_block3 = SpriteKind.create()
     export const Mystery_block4 = SpriteKind.create()
     export const hole = SpriteKind.create()
+    export const bandiera = SpriteKind.create()
+    export const Freccia = SpriteKind.create()
+    export const niente = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Mario_suchic.isHittingTile(CollisionDirection.Bottom)) {
@@ -784,6 +787,11 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
         Mario_suchic.vx = 0
     }
 })
+// sinistra-destra
+scene.onOverlapTile(SpriteKind.Enemy, assets.tile`myTile3`, function (sprite, location) {
+    goomba.setVelocity(50, 0)
+    goomba.fx = 99
+})
 info.onCountdownEnd(function () {
     game.over(false)
 })
@@ -815,32 +823,34 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         Mario_suchic.vx = 100
     }
 })
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (true) {
-        animation.runImageAnimation(
-        Mario_suchic,
-        [img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        500,
-        false
-        )
-    }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.bandiera, function (sprite, otherSprite) {
+    music.jumpUp.play()
+    pause(500)
+    bandiera.follow(bandiera_su, 50)
+    pause(1200)
+    animation.runImageAnimation(
+    bandiera,
+    [img`
+        f f f f f f f f f f f f f f f f 
+        . f f f f f f f f 6 6 6 6 6 f f 
+        . . f f f f f f 6 6 1 6 1 6 6 f 
+        . . . f f f f f 6 1 1 6 1 1 6 f 
+        . . . . f f f f 6 1 6 6 6 1 6 f 
+        . . . . . 5 5 5 6 6 6 1 6 6 6 5 
+        . . . . . . 5 5 5 6 6 6 6 6 5 5 
+        . . . . . . . 5 5 5 5 5 5 5 5 5 
+        . . . . . . . . 5 5 5 5 5 5 5 5 
+        . . . . . . . . . 5 5 5 5 5 5 5 
+        . . . . . . . . . . 5 5 5 5 5 5 
+        . . . . . . . . . . . 2 2 2 2 2 
+        . . . . . . . . . . . . 2 2 2 2 
+        . . . . . . . . . . . . . 2 2 2 
+        . . . . . . . . . . . . . . 2 2 
+        . . . . . . . . . . . . . . . 2 
+        `],
+    500,
+    false
+    )
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Mystery_block4, function (sprite, otherSprite) {
     animation.runImageAnimation(
@@ -1149,6 +1159,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Mystery_block4, function (sprite
     music.stopAllSounds()
     music.baDing.play()
     info.changeScoreBy(20)
+})
+// destra-sinistra
+scene.onOverlapTile(SpriteKind.Enemy, assets.tile`myTile1`, function (sprite, location) {
+    goomba.setVelocity(50, 0)
+    goomba.fx = 99
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Mystery_block3, function (sprite, otherSprite) {
     animation.runImageAnimation(
@@ -1462,6 +1477,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     goomba.destroy(effects.disintegrate, 500)
 })
 let Mario_suchic: Sprite = null
+let bandiera: Sprite = null
+let bandiera_su: Sprite = null
 let _4: Sprite = null
 let _3: Sprite = null
 let _2: Sprite = null
@@ -1531,7 +1548,7 @@ goomba,
 400,
 true
 )
-goomba.setPosition(308, 152)
+goomba.setPosition(265, 152)
 let hole = sprites.create(img`
     9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 
     `, SpriteKind.hole)
@@ -1963,7 +1980,102 @@ _4,
 500,
 true
 )
+let bandiera_ferma = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    f f f f f f f f f . . . . . . . 
+    f 9 9 9 9 9 9 9 f . . . . . . . 
+    f f f f f f f f f . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.niente)
+bandiera_ferma.setPosition(880, 200)
+bandiera_su = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    9 9 9 9 9 9 9 9 9 . . . . . . . 
+    9 9 9 9 9 9 9 9 9 . . . . . . . 
+    9 9 9 9 9 9 9 9 9 . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.niente)
+bandiera_su.setPosition(880, 200)
+let Destra = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . f f . . . . . 
+    . . . . . . . . . f f f . . . . 
+    . . f f f f f f f f f f f . . . 
+    . . f f f f f f f f f f f f . . 
+    . . f f f f f f f f f f f f . . 
+    . . f f f f f f f f f f f . . . 
+    . . . . . . . . . f f f . . . . 
+    . . . . . . . . . f f . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Freccia)
+Destra.setPosition(272, 144)
+let Sinistra = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . f f f . . . . . . . . . 
+    . . . f f f f f f f f f f f . . 
+    . . f f f f f f f f f f f f . . 
+    . . f f f f f f f f f f f f . . 
+    . . . f f f f f f f f f f f . . 
+    . . . . f f f . . . . . . . . . 
+    . . . . . f f . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Freccia)
+Destra.setPosition(368, 144)
 _4.setPosition(232, 169)
+bandiera = sprites.create(img`
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+    . 1 1 1 1 1 1 1 1 6 6 6 6 6 1 1 
+    . . 1 1 1 1 1 1 6 6 1 6 1 6 6 1 
+    . . . 1 1 1 1 1 6 1 1 6 1 1 6 1 
+    . . . . 1 1 1 1 6 1 6 6 6 1 6 1 
+    . . . . . 1 1 1 6 6 6 1 6 6 6 1 
+    . . . . . . 1 1 1 6 6 6 6 6 1 1 
+    . . . . . . . 1 1 1 1 1 1 1 1 1 
+    . . . . . . . . 1 1 1 1 1 1 1 1 
+    . . . . . . . . . 1 1 1 1 1 1 1 
+    . . . . . . . . . . 1 1 1 1 1 1 
+    . . . . . . . . . . . 1 1 1 1 1 
+    . . . . . . . . . . . . 1 1 1 1 
+    . . . . . . . . . . . . . 1 1 1 
+    . . . . . . . . . . . . . . 1 1 
+    . . . . . . . . . . . . . . . 1 
+    `, SpriteKind.bandiera)
+bandiera.setPosition(880, 142)
 Mario_suchic = sprites.create(img`
     . . . . . 5 5 2 2 2 . . . . . . 
     . . . . 5 5 5 2 2 2 f f f . . . 
@@ -1982,8 +2094,9 @@ Mario_suchic = sprites.create(img`
     . . . 5 5 5 . . . . 5 5 5 . . . 
     . . 5 5 5 5 . . . . 5 5 5 5 . . 
     `, SpriteKind.Player)
+// bandiera
+Mario_suchic.setPosition(745, 128)
 Mario_suchic.ay = 400
-Mario_suchic.setPosition(328, 20)
 scene.cameraFollowSprite(Mario_suchic)
 forever(function () {
 	
